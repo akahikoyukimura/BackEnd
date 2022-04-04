@@ -22,7 +22,7 @@ public class User {
 	@Column(nullable = false, length = 64)
 	private String password;
 	
-	@Column(nullable = false, unique = true, length = 45)
+	@Column(nullable = false, unique = true, length = 65)
 	private String email;
 	
 	@OneToMany
