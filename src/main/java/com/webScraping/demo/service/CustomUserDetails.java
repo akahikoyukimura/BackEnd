@@ -1,69 +1,106 @@
 package com.webScraping.demo.service;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.webScraping.demo.model.User;
 
 @Component
 public class CustomUserDetails implements UserDetails{
+	
+	private static final long serialVersionUID = 1L;
 
-	private User user;
-	
-	
-	
-	public CustomUserDetails() {
+	  private Long id;
+
+	  private String username;
+
+	  private String email;
+
+	  @JsonIgnore
+	  private String password;
+
+
+	  
+	  public CustomUserDetails() {
 		super();
 	}
 
-	public CustomUserDetails(User user) {
-		super();
-		this.user = user;
-	}
+	public CustomUserDetails(Long id, String username, String email, String password) {
+	    this.id = id;
+	    this.username = username;
+	    this.email = email;
+	    this.password = password;
+	  }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	  public static CustomUserDetails build(User user) {
 
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return user.getPassword();
-	}
+	    return new CustomUserDetails(
+	        user.getId(), 
+	        user.getUsername(), 
+	        user.getEmail(),
+	        user.getPassword());
+	  }
 
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return user.getUsername();
-	}
+	  @Override
+	  public Collection<? extends GrantedAuthority> getAuthorities() {
+	    return null;
+	  }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	  public Long getId() {
+	    return id;
+	  }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	  public String getEmail() {
+	    return email;
+	  }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	  @Override
+	  public String getPassword() {
+	    return password;
+	  }
 
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	  @Override
+	  public String getUsername() {
+	    return username;
+	  }
+
+	  @Override
+	  public boolean isAccountNonExpired() {
+	    return true;
+	  }
+
+	  @Override
+	  public boolean isAccountNonLocked() {
+	    return true;
+	  }
+
+	  @Override
+	  public boolean isCredentialsNonExpired() {
+	    return true;
+	  }
+
+	  @Override
+	  public boolean isEnabled() {
+	    return true;
+	  }
+
+	  @Override
+	  public boolean equals(Object o) {
+	    if (this == o)
+	      return true;
+	    if (o == null || getClass() != o.getClass())
+	      return false;
+	    CustomUserDetails user = (CustomUserDetails) o;
+	    return Objects.equals(id, user.id);
+	  }
 
 }

@@ -52,58 +52,60 @@ public class ScraperServiceImpl implements ScraperService {
 
             if(url.contains("amazon")) {
             	
-            	if (vehicleModel.contains("&")) {
-            		
-            		String[] parts = vehicleModel.split("&");
-            		String part1 = parts[0];
-            		String part2 = parts[1];
-            		
-            		if (vehicleModel.contains(" ")) {
-            			extractDataFromAmazon(responseDTOS,url + part1.replaceAll(" ", "+")+"&i="+part2+"-intl-ship", vehicleModel);
-					}else
-						extractDataFromAmazon(responseDTOS, url + part1+"&i="+part2+"-intl-ship", vehicleModel);
+            	String[] parts = vehicleModel.split("&");
+        		String part1 = parts[0];
+        		String part2 = parts[1];
+        		for (int j = 1; j < 20; j++) {
+        			
+        			if (vehicleModel.contains("&")&& (!part2.equalsIgnoreCase("ALL"))) {
+                		
+                		if (vehicleModel.contains(" ")) {
+                			extractDataFromAmazon(responseDTOS,url + part1.replaceAll(" ", "+")+"&i="+part2+"-intl-ship&page="+j, vehicleModel);
+    					}else
+    						extractDataFromAmazon(responseDTOS, url + part1+"&i="+part2+"-intl-ship&page="+j, vehicleModel);
+    				}
+                	else if(vehicleModel.contains(" "))
+                		extractDataFromAmazon(responseDTOS, url + vehicleModel.replaceAll(" ", "+")+"&page="+j, vehicleModel);
+                	else
+                		extractDataFromAmazon(responseDTOS, url + vehicleModel+"&page="+j, vehicleModel);
 				}
-            	else if(vehicleModel.contains(" "))
-            		extractDataFromAmazon(responseDTOS, url + vehicleModel.replaceAll(" ", "+"), vehicleModel);
-            	else
-            		extractDataFromAmazon(responseDTOS, url + vehicleModel, vehicleModel);
-            	
             	
             }else if(url.contains("ebay")) {
             	
             	String subURL=vehicleModel;
-            	
+            	for (int j = 1; j < 10; j++) {
             	if(vehicleModel.contains("&"))
             		subURL=vehicleModel.split("&")[0];
             	if(vehicleModel.contains(" "))
             		subURL=subURL.replaceAll(" ", "+");
-            	extractDataFromEbay(responseDTOS, url + subURL, vehicleModel.split("&")[0]);
-            	
+            	extractDataFromEbay(responseDTOS, url + subURL+"&_pgn="+j, vehicleModel.split("&")[0]);
+            	}
             	
             }else if(url.contains("walmart")) {
             	
             	String subURL=vehicleModel;
-            	
+            	for (int j = 1; j < 10; j++) {
             	if(vehicleModel.contains("&"))
             		subURL=vehicleModel.replaceAll("&", "+");
             	if(vehicleModel.contains(" "))
             		subURL=subURL.replaceAll(" ", "+");
             	System.out.println(subURL);
             	
-            	extractDataFromWalmart(responseDTOS, url + subURL, vehicleModel.split("&")[0]);
-            	
+            	extractDataFromWalmart(responseDTOS, url + subURL+"&page="+j, vehicleModel.split("&")[0]);
+            	}
             	
             }else if(url.contains("alibaba")) {
             	
             	String subURL=vehicleModel;
-            	
+            	for (int j = 1; j < 10; j++) {
             	if(vehicleModel.contains("&"))
             		subURL=vehicleModel.replaceAll("&", "+");
             	if(vehicleModel.contains(" "))
             		subURL=subURL.replaceAll(" ", "+");
             	System.out.println(subURL);
             	System.out.println(url+subURL);
-            	extractDataFromAlibaba(responseDTOS, url + subURL, vehicleModel.split("&")[0]);
+            	extractDataFromAlibaba(responseDTOS, url + subURL+"page="+j, vehicleModel.split("&")[0]);
+            }
             }
 
         }
